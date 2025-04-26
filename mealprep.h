@@ -28,6 +28,8 @@ private slots:
 
     void on_recipe_book_list_view_itemClicked(QListWidgetItem *item);
 
+    void on_pushButton_clicked();
+
 private:
     Ui::mealprep *ui;
     Pantry pantry;

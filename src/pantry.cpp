@@ -6,9 +6,9 @@ Pantry::Pantry(){
 }
 
 void Pantry::load_default_pantry_ingredients(){
-    ingredients["egg"] = Ingredient("egg", 7.00, "pcs");
-    ingredients["butter"] = Ingredient("butter", 3.00, "tbsp");
-    ingredients["salt"] = Ingredient("salt", 3.00, "tbsp");
+    ingredients["egg"] = Ingredient("Egg", 7.00, "pcs");
+    ingredients["butter"] = Ingredient("Butter", 3.00, "tbsp");
+    ingredients["salt"] = Ingredient("Salt", 3.00, "tbsp");
 }
 
 void Pantry::add_ingredient(const Ingredient& ingredient) {
@@ -18,6 +18,10 @@ void Pantry::add_ingredient(const Ingredient& ingredient) {
     else{
         ingredients[ingredient.get_name()].add_quantity(ingredient.get_quantity());
     }
+}
+
+void Pantry::delete_ingredient(const Ingredient& ingredient) {
+    ingredients[ingredient.get_name()].delete_quantity(ingredient.get_quantity());
 }
 
 bool Pantry::has_ingredient(const std::string ingredient_name) const {
@@ -46,6 +50,9 @@ std::vector<Ingredient> Pantry::get_all_ingredients() const{
 std::string Pantry::validate_added_ingredient(const std::string name, const double quantity, const std::string unit){
     if(name == ""){
         return "Ingredient name cannot be empty";
+    }
+    if(quantity == 0.00){
+        return "Ingredient must have non-zero quantity";
     }
     if (ingredients.find(name) != ingredients.end()){
         Ingredient existing_ingredient = ingredients[name];

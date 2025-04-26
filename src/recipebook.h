@@ -18,6 +18,7 @@ public:
     bool has_recipe(const std::string name);
     Recipe get_recipe(std::string name);
     Recipe get_ingredients_by_recipe_name(std::string name);
+    void cook_recipe(Pantry& pantry, Recipe recipe);
 
 private:
     void load_default_recipes();

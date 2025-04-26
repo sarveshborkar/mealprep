@@ -10,10 +10,10 @@ mealprep::mealprep(QWidget *parent)
     , ui(new Ui::mealprep)
 {
     ui->setupUi(this);
-    //Pantry();
-    //RecipeBook();
+
 
     ui->tabWidget->setCurrentIndex(0);
+
 
     // Pantry Table Initialization
     ui->pantry_table ->setColumnCount(3);
@@ -66,11 +66,16 @@ void mealprep::on_add_button_clicked()
 }
 
 void mealprep::updatePantryTable(){
-    std::vector<Ingredient> ingredients  = pantry.get_all_ingredients();
+    ui->pantry_table->clearContents();
+    ui->pantry_table ->setColumnCount(3);
+    QStringList headers_pantry = {"Name", "Quantity", "Unit"};
+    ui->pantry_table->setHorizontalHeaderLabels(headers_pantry);
+    ui->pantry_table->horizontalHeader()->setStretchLastSection(true);
+    std::vector<Ingredient> ingredients = pantry.get_all_ingredients();
     ui->pantry_table->setRowCount(ingredients.size());
     for (int i=0; i<ingredients.size(); i++) {
         const auto& ing = ingredients[i];
-        ui->pantry_table->setItem(i, 0, new QTableWidgetItem(QString::fromStdString(ing.get_name())));
+        ui->pantry_table->setItem(i, 0, new QTableWidgetItem(QString::fromStdString(ing.get_display_name())));
         ui->pantry_table->setItem(i, 1, new QTableWidgetItem(QString::number(ing.get_quantity())));
         ui->pantry_table->setItem(i, 2, new QTableWidgetItem(QString::fromStdString(ing.get_unit())));
     }
@@ -78,22 +83,34 @@ void mealprep::updatePantryTable(){
 
 void mealprep::updateCookableRecipeList(){
     ui->cookable_recipe_list_view->clear();
+
     std::vector<Recipe> recipes = recipe_book.get_cookable_recipes(this->pantry);
     std::cout << recipes.size() << std::endl;
     for(auto& recipe : recipes){
         ui->cookable_recipe_list_view->addItem(QString::fromStdString(recipe.get_name()));
     }
 
+    ui->cookable_recipe_ingredients_table->clearContents();
+    ui->cookable_recipe_ingredients_table->setColumnCount(3);
+    QStringList headers_cookable_recipe = {"Name", "Quantity", "Unit"};
+    ui->cookable_recipe_ingredients_table->setHorizontalHeaderLabels(headers_cookable_recipe);
+    ui->cookable_recipe_ingredients_table->horizontalHeader()->setStretchLastSection(true);
+
 }
 
 void mealprep::updateCookableRecipeIngredientsTable(Recipe& recipe){
-    ui->cookable_recipe_ingredients_table->clear();
+    ui->cookable_recipe_ingredients_table->clearContents();
+    ui->recipe_book_ingredients_table->setColumnCount(3);
+    QStringList headers_recipe_book = {"Name", "Quantity", "Unit"};
+    ui->recipe_book_ingredients_table->setHorizontalHeaderLabels(headers_recipe_book);
+    ui->recipe_book_ingredients_table->horizontalHeader()->setStretchLastSection(true);
+
     std::vector<Ingredient> ingredients = recipe.get_ingredients();
     std::cout<<"updateCookableRecipeIngredientsTable:" << ingredients.size()<<std::endl;
     ui->cookable_recipe_ingredients_table->setRowCount(ingredients.size());
     for (int i=0; i<ingredients.size(); i++) {
         const auto& ing = ingredients[i];
-        ui->cookable_recipe_ingredients_table->setItem(i, 0, new QTableWidgetItem(QString::fromStdString(ing.get_name())));
+        ui->cookable_recipe_ingredients_table->setItem(i, 0, new QTableWidgetItem(QString::fromStdString(ing.get_display_name())));
         ui->cookable_recipe_ingredients_table->setItem(i, 1, new QTableWidgetItem(QString::number(ing.get_quantity())));
         ui->cookable_recipe_ingredients_table->setItem(i, 2, new QTableWidgetItem(QString::fromStdString(ing.get_unit())));
     }
@@ -144,5 +161,23 @@ void mealprep::on_recipe_book_list_view_itemClicked(QListWidgetItem *item)
     std::string recipe_name = item->text().toStdString();
     Recipe recipe = recipe_book.get_recipe(recipe_name);
     updateRecipeBookIngredientsTable(recipe);
+}
+
+
+void mealprep::on_pushButton_clicked()
+{
+    QListWidgetItem *item = ui->cookable_recipe_list_view->currentItem();
+    if(item == nullptr){
+        QMessageBox::information(this, "Add", "Please select valid cookable recipe.");
+    }
+    std::string recipe_name = item->text().toStdString();
+    Recipe recipe = recipe_book.get_recipe(recipe_name);
+    recipe_book.cook_recipe(pantry, recipe);
+    QMessageBox::information(this, "Add", "Selected recipe has been cooked.");
+
+    updatePantryTable();
+    updateCookableRecipeList();
+    ui->tabWidget->setCurrentIndex(0);
+
 }
 

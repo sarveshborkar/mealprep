@@ -47,7 +47,12 @@ Recipe RecipeBook::get_recipe(std::string name){
     return recipes[name];
 }
 
-
+void RecipeBook::cook_recipe(Pantry& pantry, Recipe recipe){
+    std::vector<Ingredient> required_ingredients = recipe.get_ingredients();
+    for(Ingredient& ingredient : required_ingredients){
+        pantry.delete_ingredient(ingredient);
+    }
+}
 
 
 

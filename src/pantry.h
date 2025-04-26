@@ -17,6 +17,7 @@ private:
 public:
     Pantry();
     void add_ingredient(const Ingredient& ingredient);
+    void delete_ingredient(const Ingredient& ingredient);
     bool has_ingredient(const std::string ingredient_name) const;
     bool has_ingredient_of_quantity(const std::string ingredient_name, const double quantity);
     std::vector<Ingredient> get_all_ingredients() const;
