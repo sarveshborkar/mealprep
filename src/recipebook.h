@@ -1,27 +1,24 @@
-#ifndef RECIPEBOOK_H
-#define RECIPEBOOK_H
+#ifndef RECIPE_BOOK_H
+#define RECIPE_BOOK_H
 
 #include "Recipe.h"
+#include "Pantry.h"
+#include "CookabilityStrategy.h"
 #include <vector>
-#include <unordered_map>
 
+using namespace std;
 
 class RecipeBook {
 private:
-    std::unordered_map<std::string, Recipe> recipes;
+    vector<Recipe*> recipes;
 
 public:
-    RecipeBook();
-    void add_or_update_recipe(const Recipe& recipe);
-    std::vector<Recipe> get_cookable_recipes(Pantry& pantry);
-    std::vector<Recipe> get_all_recipes(Pantry& pantry);
-    bool has_recipe(const std::string name);
-    Recipe get_recipe(std::string name);
-    Recipe get_ingredients_by_recipe_name(std::string name);
-    void cook_recipe(Pantry& pantry, Recipe recipe);
+    ~RecipeBook();
+    void add_recipe(Recipe* recipe);
+    const vector<Recipe*>& get_all_recipes() const;
 
-private:
-    void load_default_recipes();
+    vector<Recipe*> get_cookable_recipes(const Pantry& pantry,
+                                         CookabilityStrategy* strategy) const;
 };
 
 #endif

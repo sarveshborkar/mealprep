@@ -1,26 +1,23 @@
 #include "Recipe.h"
 
-Recipe::Recipe(){}
+using namespace std;
 
-Recipe::Recipe(std::string name, std::vector<Ingredient> required_ingredients)
-    : name(name), required_ingredients(required_ingredients) {}
+Recipe::Recipe(const string& name) : name(name) {}
 
-std::string Recipe::get_name() const {
+Recipe::~Recipe() {
+    for (Ingredient* ing : ingredients) {
+        delete ing;
+    }
+}
+
+void Recipe::add_ingredient(Ingredient* ing) {
+    ingredients.push_back(ing);
+}
+
+const string& Recipe::get_name() const {
     return name;
 }
 
-std::vector<Ingredient> Recipe::get_ingredients() const {
-    return required_ingredients;
-}
-
-bool Recipe::can_cook(Pantry& pantry) const{
-    if(required_ingredients.size() == 0){
-        return false;
-    }
-    for (const auto& ingredient: required_ingredients) {
-        if (!pantry.has_ingredient_of_quantity(ingredient.get_name(), ingredient.get_quantity())) {
-            return false;
-        }
-    }
-    return true;
+const vector<Ingredient*>& Recipe::get_ingredients() const {
+    return ingredients;
 }

@@ -2,21 +2,23 @@
 #define RECIPE_H
 
 #include "Ingredient.h"
-#include "Pantry.h"
 #include <vector>
 #include <string>
 
+using namespace std;
+
 class Recipe {
 private:
-    std::string name;
-    std::vector<Ingredient> required_ingredients;
+    string name;
+    vector<Ingredient*> ingredients;
 
 public:
-    Recipe();
-    Recipe(std::string name, std::vector<Ingredient> required_ingredients);
-    std::string get_name() const;
-    std::vector<Ingredient> get_ingredients() const;
-    bool can_cook(Pantry& pantry) const;
+    Recipe(const string& name);
+    ~Recipe();
+
+    void add_ingredient(Ingredient* ing);
+    const string& get_name() const;
+    const vector<Ingredient*>& get_ingredients() const;
 };
 
 #endif

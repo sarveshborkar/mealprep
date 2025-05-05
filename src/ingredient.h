@@ -2,27 +2,31 @@
 #define INGREDIENT_H
 
 #include <string>
+#include <ctime>
+
+using namespace std;
 
 class Ingredient {
-private:
-    std::string name;
-    std::string display_name;
+protected:
+    string name;
     double quantity;
-    std::string unit;
+    string unit;
+    time_t expiration_date;
+    bool is_veg;
 
 public:
-    Ingredient();
-    Ingredient(const std::string name, const double quantity, const std::string unit);
-    std::string get_name() const;
-    std::string get_display_name() const;
-    double get_quantity() const;
-    std::string get_unit() const;
-    void add_quantity(const double amount);
-    void delete_quantity(const double amount);
-    bool operator==(const Ingredient& other) const;
+    Ingredient(string name, double quantity, string unit,
+               time_t expiration_date, bool is_veg);
+    virtual ~Ingredient() = default;
 
-private:
-    std::string to_lower_case(std::string input) const;
+    virtual string get_display_name() const = 0;
+    virtual string get_name() const;
+    virtual double get_quantity() const;
+    virtual string get_unit() const;
+    virtual time_t get_expiration_date() const;
+    virtual bool get_is_veg() const;
+    void set_quantity(double q);
+    virtual bool operator==(const Ingredient& other) const;
 };
 
 #endif
