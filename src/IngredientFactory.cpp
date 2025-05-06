@@ -1,45 +1,33 @@
 #include "IngredientFactory.h"
-
-#include "LiquidIngredient.h"
-#include "SolidIngredient.h"
-#include "CountableIngredient.h"
-#include "DecoratorUtils.h"
+#include "ingredients/LiquidIngredient.h"
+#include "ingredients/SolidIngredient.h"
+#include "ingredients/CountableIngredient.h"
 
 #include <algorithm>
 #include <unordered_set>
+#include <unordered_map>
 
 using namespace std;
 
-Ingredient* IngredientFactory::create(const string& name,
-                                      double quantity,
-                                      const string& unit,
-                                      time_t expiration_date,
-                                      bool is_veg) {
-    // Normalize unit to lowercase
+Ingredient* IngredientFactory::create(const string& name, double quantity, const string& unit, time_t expiration_date, bool is_veg) {
+    
     string lower_unit = unit;
     transform(lower_unit.begin(), lower_unit.end(), lower_unit.begin(), ::tolower);
 
-    Ingredient* raw = nullptr;
+    Ingredient* ing = nullptr;
+    double standardized_quantity = quantity;
+    string standardized_unit = unit;
 
-    static unordered_set<string> liquid_units = {"ml", "milliliter", "liters", "liter"};
-    static unordered_set<string> solid_units = {"grams", "g", "kg", "kilograms"};
-    static unordered_set<string> countable_units = {"pieces", "units", "pcs"};
+    static unordered_set<string> liquid_units = {"ml", "l"};
+    static unordered_set<string> solid_units = {"g", "kg"};
 
     if (liquid_units.count(lower_unit)) {
-        raw = new LiquidIngredient(name, quantity, unit, expiration_date, is_veg,
-                                   /* is_translucent */ false); // can infer later
+        ing = new LiquidIngredient(name, standardized_quantity, lower_unit, expiration_date, is_veg, false);
     } else if (solid_units.count(lower_unit)) {
-        raw = new SolidIngredient(name, quantity, unit, expiration_date, is_veg,
-                                  /* requires_refrigeration */ false,
-                                  /* texture_type */ "chunky");
-    } else if (countable_units.count(lower_unit)) {
-        raw = new CountableIngredient(name, quantity, unit, expiration_date, is_veg,
-                                      /* is_fragile */ false,
-                                      /* has_shell_or_peel */ false);
+        ing = new SolidIngredient(name, standardized_quantity, lower_unit, expiration_date, is_veg, false, "chunky");
     } else {
-        // Default fallback
-        raw = new SolidIngredient(name, quantity, unit, expiration_date, is_veg);
+        ing = new CountableIngredient(name, quantity, lower_unit, expiration_date, is_veg, false, false);
     }
 
-    return DecoratorUtils::apply_all(raw);
+    return ing;
 }

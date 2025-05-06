@@ -2,10 +2,8 @@
 
 using namespace std;
 
-Ingredient::Ingredient(string name, double quantity, string unit,
-                       time_t expiration_date, bool is_veg)
-    : name(name), quantity(quantity), unit(unit),
-      expiration_date(expiration_date), is_veg(is_veg) {}
+Ingredient::Ingredient(string name, double quantity, string unit, time_t expiration_date, bool is_veg) : name(name), 
+                        quantity(quantity), unit(unit), expiration_date(expiration_date), is_veg(is_veg) {}
 
 string Ingredient::get_name() const {
     return name;
@@ -28,7 +26,7 @@ bool Ingredient::get_is_veg() const {
 }
 
 void Ingredient::set_quantity(double q) {
-    quantity = q;
+    this->quantity = q;
 }
 
 bool Ingredient::operator==(const Ingredient& other) const {

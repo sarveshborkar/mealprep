@@ -11,14 +11,9 @@ private:
     bool is_translucent;
 
 public:
-    LiquidIngredient(string name, double quantity, string unit,
-                     time_t expiration_date, bool is_veg,
-                     bool is_translucent = false);
-
+    LiquidIngredient(string name, double quantity, string unit, time_t expiration_date, bool is_veg, bool is_translucent = false);
     string get_display_name() const override;
-
-    // Getter
-    bool get_is_translucent() const;
+    double convert_unit(double quantity, string unit);
 };
 
 #endif

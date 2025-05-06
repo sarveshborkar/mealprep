@@ -1,4 +1,5 @@
 #include "RecipeBook.h"
+#include <iostream>
 
 using namespace std;
 
@@ -25,4 +26,29 @@ vector<Recipe*> RecipeBook::get_cookable_recipes(const Pantry& pantry,
         }
     }
     return result;
+}
+
+Recipe* RecipeBook::get_recipe(const string& name) {
+    for (Recipe* recipe : recipes) {
+        if (recipe->get_name() == name) {
+            return recipe;
+        }
+    }
+    return nullptr;
+}
+
+void RecipeBook::cook_recipe(Pantry& pantry, const string& name) {
+    Recipe* recipe = get_recipe(name);
+    if (!recipe) return;
+
+    for (Ingredient* ing : recipe->get_ingredients()) {
+        if (!pantry.has_ingredient(ing->get_name(), ing->get_quantity())) {
+            cerr << "Missing or insufficient ingredient: " << ing->get_name() << endl;
+            return;
+        }
+    }
+
+    for (Ingredient* ing : recipe->get_ingredients()) {
+        pantry.use_ingredient(ing->get_name(), ing->get_quantity());
+    }
 }
