@@ -25,9 +25,9 @@ bool ExpiringFirstStrategy::can_cook(const Recipe& recipe, const Pantry& pantry)
 
         time_t earliest = get_earliest_expiry(pantry, req->get_name());
         double days_left = difftime(earliest, now) / (60 * 60 * 24);
-        if (days_left > 3)
-            return false;
+        if (days_left < 3)
+            return true;
     }
 
-    return true;
+    return false;
 }
