@@ -41,6 +41,8 @@ mealprep::mealprep(QWidget *parent)
     ui->table_book_ingredients->horizontalHeader()->setStretchLastSection(true);
     load_demo_data();
 
+    observable_pantry.add_observer(this);
+
     update_pantry_table();
     update_recipe_book_list();
     update_cookable_recipe_list();
@@ -48,6 +50,11 @@ mealprep::mealprep(QWidget *parent)
 
 mealprep::~mealprep() {
     delete ui;
+}
+
+void mealprep::update() {
+    update_pantry_table();
+    update_cookable_recipe_list();
 }
 
 void mealprep::on_push_button_add_clicked() {
@@ -79,8 +86,8 @@ void mealprep::on_push_button_add_clicked() {
         texture.toStdString()
         );
 
-    pantry.add_ingredient(ingredient);
-    update_pantry_table();
+    observable_pantry.add_ingredient(ingredient);
+    observable_pantry.notify();
 
     ui->line_edit_ingredient->clear();
     ui->spin_box_quantity->setValue(1.0);
@@ -95,7 +102,7 @@ void mealprep::update_pantry_table() {
     ui->table_pantry->clearContents();
     ui->table_pantry->setRowCount(0);
 
-    vector<Ingredient*> items = pantry.get_ingredients();
+    vector<Ingredient*> items = observable_pantry.get_ingredients();
 
     sort(items.begin(), items.end(), [](Ingredient* a, Ingredient* b) {
         if (a->get_name() != b->get_name())
@@ -126,7 +133,7 @@ void mealprep::update_cookable_recipe_list() {
     ui->list_widget_cookable->clear();
 
     unique_ptr<CookabilityStrategy> strategy(get_selected_strategy());
-    vector<Recipe*> cookable = recipe_book.get_cookable_recipes(pantry, strategy.get());
+    vector<Recipe*> cookable = recipe_book.get_cookable_recipes(observable_pantry, strategy.get());
 
     for (auto* recipe : cookable) {
         ui->list_widget_cookable->addItem(QString::fromStdString(recipe->get_name()));
@@ -156,7 +163,7 @@ void mealprep::on_list_widget_cookable_itemClicked(QListWidgetItem *item) {
 }
 
 void mealprep::on_push_button_get_recipes_clicked() {
-    update_cookable_recipe_list();
+    observable_pantry.notify();
     ui->tab_widget_main->setCurrentIndex(2);
 }
 
@@ -196,10 +203,9 @@ void mealprep::on_push_button_cook_recipe_clicked() {
     string name = item->text().toStdString();
     Recipe* recipe = recipe_book.get_recipe(name);
     if (recipe) {
-        recipe_book.cook_recipe(pantry, name);
+        recipe_book.cook_recipe(observable_pantry, name);
         QMessageBox::information(this, "Success", "Recipe cooked successfully.");
-        update_pantry_table();
-        update_cookable_recipe_list();
+        observable_pantry.notify();
         ui->tab_widget_main->setCurrentIndex(0);
     }
 }
@@ -234,12 +240,12 @@ void mealprep::load_demo_data() {
     time_t oats_expiry  = QDateTime(QDate::currentDate().addDays(50), QTime(23, 59, 59)).toSecsSinceEpoch();
     time_t salt_expiry =  QDateTime(QDate::currentDate().addDays(90), QTime(23, 59, 59)).toSecsSinceEpoch();
 
-    pantry.add_ingredient(new SolidIngredient("Flour", 1000, "g", flour_expiry, true, false, "powder"));
-    pantry.add_ingredient(new SolidIngredient("Sugar", 500, "g", sugar_expiry, true, false, "crystals"));
-    pantry.add_ingredient(new LiquidIngredient("Milk", 2, "l", milk_expiry, true, true));
-    pantry.add_ingredient(new CountableIngredient("Egg", 3, "pcs", egg_expiry, false, true, true));
-    pantry.add_ingredient(new SolidIngredient("Oats", 500, "g", oats_expiry, true, false, "flakes"));
-    pantry.add_ingredient(new SolidIngredient("Salt", 100, "g", salt_expiry, true, false, "crystals"));
+    observable_pantry.add_ingredient(new SolidIngredient("Flour", 1000, "g", flour_expiry, true, false, "powder"));
+    observable_pantry.add_ingredient(new SolidIngredient("Sugar", 500, "g", sugar_expiry, true, false, "crystals"));
+    observable_pantry.add_ingredient(new LiquidIngredient("Milk", 2, "l", milk_expiry, true, true));
+    observable_pantry.add_ingredient(new CountableIngredient("Egg", 3, "pcs", egg_expiry, false, true, true));
+    observable_pantry.add_ingredient(new SolidIngredient("Oats", 500, "g", oats_expiry, true, false, "flakes"));
+    observable_pantry.add_ingredient(new SolidIngredient("Salt", 100, "g", salt_expiry, true, false, "crystals"));
 
     Recipe* pancakes = new Recipe("Pancakes");
     pancakes->add_ingredient(new SolidIngredient("Flour", 200, "g", 0, true, false, "powder"));

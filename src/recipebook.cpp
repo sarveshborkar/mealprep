@@ -1,4 +1,5 @@
 #include "RecipeBook.h"
+#include "src/observer/ObservablePantry.h"
 #include <iostream>
 
 using namespace std;
@@ -17,7 +18,7 @@ const vector<Recipe*>& RecipeBook::get_all_recipes() const {
     return recipes;
 }
 
-vector<Recipe*> RecipeBook::get_cookable_recipes(const Pantry& pantry,
+vector<Recipe*> RecipeBook::get_cookable_recipes(const ObservablePantry& pantry,
                                                  CookabilityStrategy* strategy) const {
     vector<Recipe*> result;
     for (Recipe* r : recipes) {
@@ -37,7 +38,7 @@ Recipe* RecipeBook::get_recipe(const string& name) {
     return nullptr;
 }
 
-void RecipeBook::cook_recipe(Pantry& pantry, const string& name) {
+void RecipeBook::cook_recipe(ObservablePantry& pantry, const string& name) {
     Recipe* recipe = get_recipe(name);
     if (!recipe) return;
 

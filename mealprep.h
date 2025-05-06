@@ -10,6 +10,8 @@
 #include "src/strategies/ExactMatchStrategy.h"
 #include "src/strategies/VegOnlyStrategy.h"
 #include "src/strategies/ExpiringFirstStrategy.h"
+#include "src/observer/Observer.h"
+#include "src/observer/ObservablePantry.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -17,13 +19,14 @@ class main_window_mealprep;
 }
 QT_END_NAMESPACE
 
-class mealprep : public QMainWindow
+class mealprep : public QMainWindow, public Observer
 {
     Q_OBJECT
 
 public:
-    mealprep(QWidget *parent = nullptr);
+    explicit mealprep(QWidget *parent = nullptr);
     ~mealprep();
+    void update() override;
 
 private slots:
     void on_push_button_add_clicked();
@@ -35,7 +38,7 @@ private slots:
 
 private:
     Ui::main_window_mealprep *ui;
-    Pantry pantry;
+    ObservablePantry observable_pantry;
     RecipeBook recipe_book;
 
     void update_pantry_table();

@@ -20,7 +20,8 @@ SOURCES += \
     src/strategies/CookabilityStrategy.cpp \
     src/strategies/ExactMatchStrategy.cpp \
     src/strategies/VegOnlyStrategy.cpp \
-    src/strategies/ExpiringFirstStrategy.cpp
+    src/strategies/ExpiringFirstStrategy.cpp \
+    src/observer/ObservablePantry.cpp
 
 HEADERS += \
     mealprep.h \
@@ -35,7 +36,9 @@ HEADERS += \
     src/strategies/CookabilityStrategy.h \
     src/strategies/ExactMatchStrategy.h \
     src/strategies/VegOnlyStrategy.h \
-    src/strategies/ExpiringFirstStrategy.h
+    src/strategies/ExpiringFirstStrategy.h \
+    src/observer/Observer.h \
+    src/observer/ObservablePantry.h
 
 FORMS += \
     mealprep.ui

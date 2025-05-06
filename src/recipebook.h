@@ -3,6 +3,7 @@
 
 #include "Recipe.h"
 #include "Pantry.h"
+#include "observer/ObservablePantry.h"
 #include "strategies/CookabilityStrategy.h"
 #include <vector>
 
@@ -16,8 +17,8 @@ public:
     void add_recipe(Recipe* recipe);
     const vector<Recipe*>& get_all_recipes() const;
     Recipe* get_recipe(const std::string& name);
-    void cook_recipe(Pantry& pantry, const std::string& name);
-    vector<Recipe*> get_cookable_recipes(const Pantry& pantry, CookabilityStrategy* strategy) const;
+    void cook_recipe(ObservablePantry& pantry, const std::string& name);
+    vector<Recipe*> get_cookable_recipes(const ObservablePantry& pantry, CookabilityStrategy* strategy) const;
     ~RecipeBook();
 };
 
