@@ -3,14 +3,15 @@
 
 #include "../Recipe.h"
 #include "../Pantry.h"
+#include "../observer/ObservablePantry.h"
 
 class CookabilityStrategy {
 public:
     virtual ~CookabilityStrategy() = default;
-    virtual bool can_cook(const Recipe& recipe, const Pantry& pantry) const = 0;
+    virtual bool can_cook(const Recipe& recipe, const ObservablePantry& pantry) const = 0;
 
 protected:
-    double get_total_available_quantity(const Pantry& pantry, const std::string& name) const;
+    virtual double get_total_available_quantity(const ObservablePantry& pantry, const std::string& name) const;
 };
 
 #endif

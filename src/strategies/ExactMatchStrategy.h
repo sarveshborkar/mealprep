@@ -5,7 +5,7 @@
 
 class ExactMatchStrategy : public CookabilityStrategy {
 public:
-    bool can_cook(const Recipe& recipe, const Pantry& pantry) const override;
+    bool can_cook(const Recipe& recipe, const ObservablePantry& pantry) const override;
 };
 
 #endif

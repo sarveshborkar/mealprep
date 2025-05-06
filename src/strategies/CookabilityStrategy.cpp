@@ -1,12 +1,13 @@
 #include "CookabilityStrategy.h"
 #include "../ingredients/Ingredient.h"
 #include <ctime>
+#include <iostream>
 
-double CookabilityStrategy::get_total_available_quantity(const Pantry& pantry, const std::string& name) const {
+double CookabilityStrategy::get_total_available_quantity(const ObservablePantry& pantry, const std::string& name) const {
     double total = 0.0;
     time_t now = time(nullptr);
 
-    for (Ingredient* ing : pantry.get_all_ingredients_by_name(name)) {
+    for (Ingredient* ing : pantry.get_ingredient_by_name(name)) {
         if (ing->get_expiration_date() >= now) {
             total += ing->get_quantity();
         }

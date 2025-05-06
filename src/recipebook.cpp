@@ -18,9 +18,9 @@ const vector<Recipe*>& RecipeBook::get_all_recipes() const {
     return recipes;
 }
 
-vector<Recipe*> RecipeBook::get_cookable_recipes(const ObservablePantry& pantry,
-                                                 CookabilityStrategy* strategy) const {
+vector<Recipe*> RecipeBook::get_cookable_recipes(const ObservablePantry& pantry, CookabilityStrategy* strategy) const {
     vector<Recipe*> result;
+
     for (Recipe* r : recipes) {
         if (strategy->can_cook(*r, pantry)) {
             result.push_back(r);
