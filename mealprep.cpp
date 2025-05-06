@@ -115,7 +115,7 @@ void mealprep::update_pantry_table() {
 
     for (size_t i = 0; i < items.size(); ++i) {
         auto* ing = items[i];
-        ui->table_pantry->setItem(i, 0, new QTableWidgetItem(QString::fromStdString(ing->get_display_name())));
+        ui->table_pantry->setItem(i, 0, new QTableWidgetItem(QString::fromStdString(ing->get_name())));
         ui->table_pantry->setItem(i, 1, new QTableWidgetItem(QString::number(ing->get_quantity())));
         ui->table_pantry->setItem(i, 2, new QTableWidgetItem(QString::fromStdString(ing->get_unit())));
         QDateTime expiry = QDateTime::fromSecsSinceEpoch(ing->get_expiration_date());

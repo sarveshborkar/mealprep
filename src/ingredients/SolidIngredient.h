@@ -13,7 +13,6 @@ private:
 
 public:
     SolidIngredient(string name, double quantity, string unit, time_t expiration_date, bool is_veg, bool requires_refrigeration = false, string texture_type = "chunky");
-    string get_display_name() const override;
     double convert_unit(double quantity, string unit);
 };
 

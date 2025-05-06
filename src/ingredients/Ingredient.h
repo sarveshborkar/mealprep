@@ -16,7 +16,6 @@ protected:
 
 public:
     Ingredient(string name, double quantity, string unit, time_t expiration_date, bool is_veg);
-    virtual string get_display_name() const = 0;
     virtual string get_name() const;
     virtual double get_quantity() const;
     virtual string get_unit() const;
