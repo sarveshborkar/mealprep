@@ -31,6 +31,7 @@ private slots:
     void on_push_button_get_recipes_clicked();
     void on_list_widget_recipe_book_itemClicked(QListWidgetItem *item);
     void on_push_button_cook_recipe_clicked();
+    void on_combo_box_unit_currentTextChanged(const QString& unit);
 
 private:
     Ui::main_window_mealprep *ui;

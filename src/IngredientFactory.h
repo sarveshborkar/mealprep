@@ -9,7 +9,8 @@ using namespace std;
 
 class IngredientFactory {
 public:
-    static Ingredient* create(const string& name, double quantity, const string& unit, time_t expiration_date, bool is_veg);
+    static Ingredient* create(const string& name, double quantity, const string& unit, time_t expiration_date, bool is_veg,
+        bool is_fragile = false, bool has_shell_or_peel = false, bool is_translucent = false, bool requires_refrigeration = false, string texture_type = "chunky");
 };
 
 #endif

@@ -20,6 +20,10 @@ mealprep::mealprep(QWidget *parent)
     ui->date_edit_expiry->setDate(QDate::currentDate());
     ui->date_edit_expiry->setMinimumDate(QDate::currentDate().addDays(-5));
 
+    ui->check_box_translucent->hide();
+    ui->check_box_fragile->hide();
+    ui->check_box_shell->hide();
+
     ui->table_pantry->setColumnCount(4);
     ui->table_pantry->setHorizontalHeaderLabels({"Name", "Quantity", "Unit", "Expiry Date"});
     ui->table_pantry->horizontalHeader()->setStretchLastSection(true);
@@ -53,6 +57,11 @@ void mealprep::on_push_button_add_clicked() {
     bool is_veg = ui->check_box_veg->isChecked();
     QDate date = ui->date_edit_expiry->date();
     time_t expiry = QDateTime(date, QTime(23, 59, 59)).toSecsSinceEpoch();
+    bool is_translucent = ui->check_box_translucent->isChecked();
+    bool requires_refrigeration = ui->check_box_refrigerate->isChecked();
+    bool is_fragile = ui->check_box_fragile->isChecked();
+    bool has_shell = ui->check_box_shell->isChecked();
+    QString texture = ui->line_edit_texture_type->text();
 
     if (name.isEmpty()) {
         QMessageBox::warning(this, "Input Error", "Ingredient name cannot be empty.");
@@ -64,7 +73,10 @@ void mealprep::on_push_button_add_clicked() {
         quantity,
         unit.toStdString(),
         expiry,
-        is_veg
+        is_veg,
+        is_fragile, has_shell,
+        is_translucent, requires_refrigeration,
+        texture.toStdString()
         );
 
     pantry.add_ingredient(ingredient);
@@ -189,6 +201,28 @@ void mealprep::on_push_button_cook_recipe_clicked() {
         update_pantry_table();
         update_cookable_recipe_list();
         ui->tab_widget_main->setCurrentIndex(0);
+    }
+}
+
+void mealprep::on_combo_box_unit_currentTextChanged(const QString& unit) {
+    QString u = unit.toLower();
+
+    ui->check_box_translucent->hide();
+    ui->check_box_refrigerate->hide();
+    ui->check_box_fragile->hide();
+    ui->check_box_shell->hide();
+    ui->label_texture->hide();
+    ui->line_edit_texture_type->hide();
+
+    if (u == "ml" || u == "l") {
+        ui->check_box_translucent->show();
+    } else if (u == "g" || u == "kg") {
+        ui->check_box_refrigerate->show();
+        ui->label_texture->show();
+        ui->line_edit_texture_type->show();
+    } else {
+        ui->check_box_fragile->show();
+        ui->check_box_shell->show();
     }
 }
 
