@@ -1,6 +1,5 @@
 #include "ExactMatchStrategy.h"
 #include "../ingredients/Ingredient.h"
-#include <iostream>
 
 using namespace std;
 

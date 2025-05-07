@@ -8,7 +8,6 @@
 
 #include <QMessageBox>
 #include <QDateTime>
-#include <iostream>
 
 using namespace std;
 

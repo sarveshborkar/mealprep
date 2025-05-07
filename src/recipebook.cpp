@@ -1,6 +1,5 @@
 #include "RecipeBook.h"
 #include "src/observer/ObservablePantry.h"
-#include <iostream>
 
 using namespace std;
 

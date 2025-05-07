@@ -1,7 +1,6 @@
 #include "CookabilityStrategy.h"
 #include "../ingredients/Ingredient.h"
 #include <ctime>
-#include <iostream>
 
 double CookabilityStrategy::get_total_available_quantity(const ObservablePantry& pantry, const std::string& name) const {
     double total = 0.0;
